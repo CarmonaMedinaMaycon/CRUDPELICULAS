@@ -17,7 +17,7 @@
 
     <div class="mb-4">
         <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
-          <b-card :title="pelicula.title" style="width: 100%; height: 17rem" class="mb-2">
+          <b-card :title="pelicula.name" style="width: 100%; height: 17rem" class="mb-2">
             <b-card-text class="card-text-scroll">
               <b>Género:</b> {{ pelicula.genres }}<br>
               <b>Descripción:</b> {{ pelicula.description }}<br>
@@ -43,7 +43,7 @@ export default {
     return {
       peliculas:{
         id:0,
-        title:'',
+        name:'',
         description:'',
         genres:[]
       }

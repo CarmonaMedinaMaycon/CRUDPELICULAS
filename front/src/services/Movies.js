@@ -3,10 +3,10 @@ import axios from 'axios';
 
 
 const getMovie = async () => {
-   try {
-    const response = await axios.get("https://pokeapi.co/api/v2/pokemon/ditto");
+   try { 
+    const response = await axios.get("http://192.168.0.7:8080/api/movies/");
     console.log(response);
-      return response.data;
+      return response.data.data;
    } catch (error) {
       throw error;
    }
