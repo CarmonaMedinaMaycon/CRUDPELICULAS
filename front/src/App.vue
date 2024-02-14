@@ -8,36 +8,35 @@
           </b>
         </div>
         <div class="bodybutton">
-          <b-button v-b-modal.modal-save-movie class="btnadd">
+          <b-button v-b-modal.modal-save class="btnadd">
             <b-icon icon="plus"></b-icon> Registrar pelicula
           </b-button>
         </div>
       </div>
     </template>
 
-    <div class="mb-4">
+    <b-row class="mb-4">
         <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
-          <b-card :title="pelicula.name" style="width: 100%; height: 17rem" class="mb-2">
+          <b-card :title="pelicula.name"  img-src="https://imgs.search.brave.com/5yLy2Vd-AcHQFOAMoQtlMkUY5VNtYEPsmMJ2pLqI1HA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzZXQuY29t/L3cvZnVsbC9iLzcv/OC80MDQzNy5qcGc"  class="mb-2">
             <b-card-text class="card-text-scroll">
-              <b>Género:</b> {{ pelicula.genres }}<br>
+              <b>Género:</b> {{ pelicula.genres.name }}<br>
               <b>Descripción:</b> {{ pelicula.description }}<br>
             </b-card-text>
-            <template #footer>
-              <div class="icono">
-               
-              </div>
-            </template>
+         
           </b-card>
         </b-col>
-    </div>
-    
+      </b-row>
+      <ModalSave/>
+
 
   </div>
 </template>
 
 <script>
 import Movies from './services/Movies';
+import ModalSave from './components/ModalSave.vue';
 export default {
+  components: { ModalSave },
   name: "pelis",
   data() {
     return {
@@ -45,7 +44,11 @@ export default {
         id:0,
         name:'',
         description:'',
-        genres:[]
+        genres:{
+          id:0,
+          description:'',
+          name:''
+        }
       }
 
     }
