@@ -5,19 +5,18 @@
                 <header class="text-center border-bottom">
                     <p style="font-family: cabin">Registrar pelicula</p>
                 </header>
-
                 <main>
                     <form id="registrarPelicula">
                         <b-row>
                             <b-col>
                                 <label for="pelicula">Nombre de la pelicula: *</label>
-                                <b-form-input v-model="pelicula.name" type="text" class="form-control"
-                                    placeholder="Pelicula..." required :state="validateName"
-                                    aria-describedby="input-live-help input-live-feedback" />
+                              
+                                    <b-form-input v-model="pelicula.name" type="text" class="form-control"
+              placeholder="Pelicula..." required 
+              :class="{ 'input-border-error': !validateName && pelicula.name.length > 0, 'input-border-success': validateName }"
+              aria-describedby="input-live-help input-live-feedback" />
 
-                                <b-form-invalid-feedback :state="validateName">
-                                    Formato invalido
-                                </b-form-invalid-feedback>
+              <div v-if="!validateName && pelicula.name.length > 0" class="invalid-feedback">Formato inválido</div>
 
 
                             </b-col>
@@ -134,7 +133,7 @@ export default {
     computed: {
         validateName() {
             const regex = /^[a-zA-Z0-9]+$/;
-            return this.pelicula.name.length > 0 && this.pelicula.name.length < 100 && regex.test(this.pelicula.name);
+            return this.pelicula.name.length > 0 && this.pelicula.name.length < 100 && regex.test(this.pelicula.name) ;
         },
         validateDescription() {
             const regex = /^[a-zA-Z0-9]+$/;
@@ -161,7 +160,14 @@ export default {
 
 .cancel {
     font-family: Cabin;
-    background-color: #ffce50;
+    background-color: brown;
     color: black;
+}
+.input-border-error {
+  border: 1px solid red !important; 
+}
+
+.input-border-success {
+  border: 1px solid green !important; 
 }
 </style>
