@@ -26,6 +26,7 @@
               <b>Género:</b> {{ pelicula.genres.name }}<br>
               <b>Director:</b> {{ pelicula.director }}<br>
               <b>Descripción:</b> {{ pelicula.description }}<br>
+              <b>Fecha de estreno:</b> {{ pelicula.releaseDate }}<br>
             </b-card-text>
          
           </b-card>
@@ -50,6 +51,7 @@ export default {
         name:'',
         director:'',
         description:'',
+        releaseDate:'',
         genres:{
           id:0,
           description:'',
