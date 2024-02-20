@@ -80,25 +80,18 @@ public class MoviesController {
 
     @GetMapping("/search")
     public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByName(@RequestParam String term) {
-        CustomResponse<List<Movies>> response = service.findMoviesByTermInName(term);
+        CustomResponse<List<Movies>> responseByName = service.findMoviesByTermInName(term);
+        CustomResponse<List<Movies>> responseByDirector = service.findMoviesByDirector(term);
 
-
-        if (response.getData() != null) {
-            List<Movies> movies = response.getData();
-            for (Movies movie : movies) {
-                System.out.println("Película encontrada: " + movie.getName());
-            }
-        }
-
-
-        if (response.getError()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(response);
+        if (responseByName.getData() != null && !responseByName.getData().isEmpty()) {
+            return ResponseEntity.ok(responseByName);
+        } else if (responseByDirector.getData() != null && !responseByDirector.getData().isEmpty()) {
+            return ResponseEntity.ok(responseByDirector);
         } else {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(response);
+            CustomResponse<List<Movies>> combinedResponse = new CustomResponse<>();
+            combinedResponse.setError(true);
+            combinedResponse.setMessage("No se encontraron películas para el término o director proporcionado.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(combinedResponse);
         }
     }
 
