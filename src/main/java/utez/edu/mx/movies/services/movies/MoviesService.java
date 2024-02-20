@@ -106,7 +106,7 @@ public class MoviesService  {
 
 
 
-    public CustomResponse findMoviesByTermInName(String searchTerm) {
+    public CustomResponse<List<Movies>> findMoviesByTermInName(String searchTerm) {
         List<Movies> movies = repository.findByNameContaining(searchTerm);
         if (movies.isEmpty()) {
             return new CustomResponse<>(
@@ -117,13 +117,14 @@ public class MoviesService  {
             );
         } else {
             return new CustomResponse<>(
-                    true,
+                    movies,
                     false,
                     200,
                     "Pelicula o peliculas encontradas"
             );
         }
     }
+
 
 
 

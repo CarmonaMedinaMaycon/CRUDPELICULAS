@@ -78,9 +78,19 @@ public class MoviesController {
     }
 
 
-    @GetMapping("/movies/search")
+    @GetMapping("/search")
     public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByName(@RequestParam String term) {
         CustomResponse<List<Movies>> response = service.findMoviesByTermInName(term);
+
+
+        if (response.getData() != null) {
+            List<Movies> movies = response.getData();
+            for (Movies movie : movies) {
+                System.out.println("Película encontrada: " + movie.getName());
+            }
+        }
+
+
         if (response.getError()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
