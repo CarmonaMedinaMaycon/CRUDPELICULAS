@@ -101,4 +101,21 @@ public class MoviesController {
                     .body(response);
         }
     }
+
+    @GetMapping("/searchD")
+    public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByDirector(@RequestParam String director) {
+        if (director == null || director.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new CustomResponse<>(null, true, 400, "Debe proporcionar el nombre del director"));
+        }
+
+        CustomResponse<List<Movies>> response = service.findMoviesByDirector(director);
+
+        return ResponseEntity
+                .status(response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK)
+                .body(response);
+    }
+
+
 }

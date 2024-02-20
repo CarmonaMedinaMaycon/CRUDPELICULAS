@@ -25,6 +25,9 @@ public class Movies {
     private String name;
 
     @Column(nullable = false)
+    private String director;
+
+    @Column(nullable = false)
     private String description;
 
 

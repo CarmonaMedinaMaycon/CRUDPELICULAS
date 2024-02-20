@@ -125,6 +125,26 @@ public class MoviesService  {
         }
     }
 
+    public CustomResponse<List<Movies>> findMoviesByDirector(String director) {
+        List<Movies> movies = repository.findByDirector(director);
+        if (movies.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "No se encontraron películas dirigidas por " + director
+            );
+        } else {
+            return new CustomResponse<>(
+                    movies,
+                    false,
+                    200,
+                    "Películas dirigidas por " + director + " encontradas"
+            );
+        }
+    }
+
+
 
 
 
