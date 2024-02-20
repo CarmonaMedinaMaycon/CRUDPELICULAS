@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import utez.edu.mx.movies.models.genres.Genres;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "movies")
 @AllArgsConstructor
@@ -26,6 +28,11 @@ public class Movies {
 
     @Column(nullable = false)
     private String director;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE) // solo guarda año/mes/dia yyyy-mm-dd
+    private Date releaseDate; //
+
 
     @Column(nullable = false)
     private String description;

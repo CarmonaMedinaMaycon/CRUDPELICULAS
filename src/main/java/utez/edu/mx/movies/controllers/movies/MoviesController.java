@@ -98,27 +98,4 @@ public class MoviesController {
         }
     }
 
-
-
-
-
-
-    //nopis
-    @GetMapping("/searchGenre")
-    public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByGenre(@RequestParam String genreName) {
-        if (genreName == null || genreName.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new CustomResponse<>(null, true, 400, "Debe proporcionar el nombre del género"));
-        }
-
-        CustomResponse<List<Movies>> response = service.findMoviesByGenre(genreName);
-
-        return ResponseEntity
-                .status(response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK)
-                .body(response);
-    }
-
-
-
 }
