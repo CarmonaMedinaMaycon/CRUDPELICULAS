@@ -144,8 +144,6 @@ public class MoviesService  {
         }
     }
 
-
-
     public CustomResponse<List<Movies>> findMoviesByGenre(String genreName) {
         List<Movies> movies = repository.findByGenreName(genreName);
         if (movies.isEmpty()) {
@@ -161,6 +159,25 @@ public class MoviesService  {
                     false,
                     200,
                     "Películas en el género '" + genreName + "' encontradas"
+            );
+        }
+    }
+
+    public CustomResponse<List<Movies>> findMoviesByReleaseDateDescending() {
+        List<Movies> movies = repository.findByOrderByReleaseDateDesc();
+        if (movies.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "No se encontraron películas"
+            );
+        } else {
+            return new CustomResponse<>(
+                    movies,
+                    false,
+                    200,
+                    "Películas encontradas"
             );
         }
     }

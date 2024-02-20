@@ -12,4 +12,7 @@ public interface MoviesRepository extends JpaRepository<Movies, Long> {
     @Query("SELECT m FROM Movies m WHERE m.genres.name = :genreName")
     List<Movies> findByGenreName(String genreName);
 
+
+    List<Movies> findByOrderByReleaseDateDesc();
+
 }

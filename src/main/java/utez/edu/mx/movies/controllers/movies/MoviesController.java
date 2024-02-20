@@ -98,4 +98,21 @@ public class MoviesController {
         }
     }
 
+
+
+    @GetMapping("/sortedByReleaseDateDesc")
+    public ResponseEntity<CustomResponse<List<Movies>>> getMoviesSortedByReleaseDateDesc() {
+        CustomResponse<List<Movies>> response = service.findMoviesByReleaseDateDescending();
+
+        if (response.getError()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(response);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(response);
+        }
+    }
+
 }
