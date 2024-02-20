@@ -146,7 +146,24 @@ public class MoviesService  {
 
 
 
-
+    public CustomResponse<List<Movies>> findMoviesByGenre(String genreName) {
+        List<Movies> movies = repository.findByGenreName(genreName);
+        if (movies.isEmpty()) {
+            return new CustomResponse<>(
+                    null,
+                    true,
+                    400,
+                    "No se encontraron películas en el género '" + genreName + "'"
+            );
+        } else {
+            return new CustomResponse<>(
+                    movies,
+                    false,
+                    200,
+                    "Películas en el género '" + genreName + "' encontradas"
+            );
+        }
+    }
 
 
 

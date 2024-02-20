@@ -82,18 +82,43 @@ public class MoviesController {
     public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByName(@RequestParam String term) {
         CustomResponse<List<Movies>> responseByName = service.findMoviesByTermInName(term);
         CustomResponse<List<Movies>> responseByDirector = service.findMoviesByDirector(term);
+        CustomResponse<List<Movies>> responseByGenre = service.findMoviesByGenre(term);
 
         if (responseByName.getData() != null && !responseByName.getData().isEmpty()) {
             return ResponseEntity.ok(responseByName);
         } else if (responseByDirector.getData() != null && !responseByDirector.getData().isEmpty()) {
             return ResponseEntity.ok(responseByDirector);
+        } else if (responseByGenre.getData() != null && !responseByGenre.getData().isEmpty()) {
+            return ResponseEntity.ok(responseByGenre);
         } else {
             CustomResponse<List<Movies>> combinedResponse = new CustomResponse<>();
             combinedResponse.setError(true);
-            combinedResponse.setMessage("No se encontraron películas para el término o director proporcionado.");
+            combinedResponse.setMessage("No se encontraron películas para el nombre, director o género proporcionado.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(combinedResponse);
         }
     }
-    
+
+
+
+
+
+
+    //nopis
+    @GetMapping("/searchGenre")
+    public ResponseEntity<CustomResponse<List<Movies>>> searchMoviesByGenre(@RequestParam String genreName) {
+        if (genreName == null || genreName.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new CustomResponse<>(null, true, 400, "Debe proporcionar el nombre del género"));
+        }
+
+        CustomResponse<List<Movies>> response = service.findMoviesByGenre(genreName);
+
+        return ResponseEntity
+                .status(response.getError() ? HttpStatus.BAD_REQUEST : HttpStatus.OK)
+                .body(response);
+    }
+
+
 
 }

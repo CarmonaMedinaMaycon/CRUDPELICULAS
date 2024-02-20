@@ -32,9 +32,4 @@ public class Genres {
     @OneToMany(mappedBy="genres")
     @JsonIgnore
     private List<Movies> movies;
-
-
-
-
-
 }
