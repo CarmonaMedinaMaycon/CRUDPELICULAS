@@ -14,12 +14,17 @@
         </div>
       </div>
     </template>
-
+    <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar pelicula" aria-label="Buscar pelicula"
+                     v-model="search"/>
+                     <b-button @click="getSearch(search)" class="input-group-text bg-primary text-secondary" readonly>buscar</b-button>
+            </div>
     <b-row class="mb-4">
         <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
           <b-card :title="pelicula.name"  img-src="https://imgs.search.brave.com/5yLy2Vd-AcHQFOAMoQtlMkUY5VNtYEPsmMJ2pLqI1HA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzZXQuY29t/L3cvZnVsbC9iLzcv/OC80MDQzNy5qcGc"  class="mb-2">
             <b-card-text class="card-text-scroll">
               <b>Género:</b> {{ pelicula.genres.name }}<br>
+              <b>Director:</b> {{ pelicula.director }}<br>
               <b>Descripción:</b> {{ pelicula.description }}<br>
             </b-card-text>
          
@@ -43,13 +48,15 @@ export default {
       peliculas:{
         id:0,
         name:'',
+        director:'',
         description:'',
         genres:{
           id:0,
           description:'',
           name:''
         }
-      }
+      },
+      search:'',
 
     }
   },
@@ -58,6 +65,16 @@ export default {
     async getMovies() {
      try {
       const response = await Movies.getMovie();
+      console.log("soy la data", response);
+      this.peliculas = response;
+     } catch (error) {
+      console.log("trono papito", error);
+     }
+    }, 
+    async getSearch(search) {
+     try {
+      console.log();
+      const response = await Movies.search(search);
       console.log("soy la data", response);
       this.peliculas = response;
      } catch (error) {
