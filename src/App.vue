@@ -72,6 +72,8 @@ export default {
   },
 
   methods: {
+    
+
     async getMovies() {
       try {
         const response = await Movies.getMovie();

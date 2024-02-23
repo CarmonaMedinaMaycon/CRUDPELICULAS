@@ -31,6 +31,30 @@
                                 </b-form-invalid-feedback>
                             </b-col>
                         </b-row>
+
+                        <b-row>
+                            <b-col>
+                                <label for="director">Director: *</label>
+                                <b-form-input v-model="pelicula.director" type="text" class="form-control"
+                                    placeholder="Director..." required
+                                    :class="{ 'input-border-error': !validateDirector && pelicula.director.length > 0, 'input-border-success': validateDirector }"
+                                    aria-describedby="input-live-help input-live-feedback" />
+                                <div v-if="!validateDirector && pelicula.director.length > 0" class="invalid-feedback">
+                                    Formato
+                                    inválido</div>
+                            </b-col>
+                            <b-col>
+                                <label for="releaseDate">Fecha de lanzamiento: *</label>
+                                <b-form-input v-model="pelicula.releaseDate" type="date" class="form-control"
+                                    placeholder="Fecha de lanzamiento..." required
+                                    :class="{ 'input-border-error': !validateReleaseDate && pelicula.releaseDate.length > 0, 'input-border-success': validateReleaseDate }"
+                                    aria-describedby="input-live-help input-live-feedback" />
+                                <div v-if="!validateReleaseDate && pelicula.releaseDate.length > 0"
+                                    class="invalid-feedback">Formato
+                                    inválido</div>
+                            </b-col>
+                        </b-row>
+
                         <b-row>
                             <b-col>
                                 <label for="pelicula">Descripción de la pelicula: *</label>
@@ -39,7 +63,7 @@
                                     :state="validateDescription"></b-form-textarea>
 
                                 <b-form-invalid-feedback :state="validateDescription">
-                                    No se aceptan caracteres especiales ni espacios en blanco
+                                    Formato inválido	
                                 </b-form-invalid-feedback>
 
                             </b-col>
@@ -72,6 +96,8 @@ export default {
         return {
             pelicula: {
                 name: "",
+                director: "",
+                releaseDate: "",
                 description: "",
                 genres: {
                     id: null
@@ -98,33 +124,51 @@ export default {
             };
         },
         async save() {
-            Swal.fire({
-                title: "¿Estás seguro de registrar etsa pelicula?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#008c6f',
-                cancelButtonColor: '#e11c24',
-                confirmButtonText: "Confirmar",
-                cancelButtonText: 'Cancelar',
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        console.log(this.pelicula);
-                        await Movies.postMovie(this.pelicula);
-                        Swal.fire({
-                            title: "¡Guardada!",
-                            text: "La pelicula se registró correctamente",
-                            icon: "success"
-                        });
-                        this.onClose();
-                        this.$emit('movie-updated');
-                    } catch (error) {
-                        console.log("Error al guardar la pelicula", error);
-                    }
+            if (this.validateForm) {
+                Swal.fire({
+                    title: "¿Estás seguro de registrar esta película?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#008c6f',
+                    cancelButtonColor: '#e11c24',
+                    confirmButtonText: "Confirmar",
+                    cancelButtonText: 'Cancelar',
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            if (!this.validateGenres) {
 
-                }
-            });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Por favor selecciona un género para la película',
+                                });
+                                return;
+                            }
+                            console.log(this.pelicula);
+                            await Movies.postMovie(this.pelicula);
+                            Swal.fire({
+                                title: "¡Guardada!",
+                                text: "La película se registró correctamente",
+                                icon: "success"
+                            });
+                            this.onClose();
+                            this.$emit('movie-updated');
+                        } catch (error) {
+                            console.log("Error al guardar la película", error);
+                        }
+                    }
+                });
+            } else {
+                // Mostrar un mensaje de error indicando que el formulario no es válido
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor completa todos los campos correctamente',
+                });
+            }
         },
+
 
         async fetchGenres() {
             try {
@@ -143,11 +187,16 @@ export default {
     },
     computed: {
         validateName() {
-            const regex = /^[a-zA-Z0-9]+$/;
-            return this.pelicula.name.length > 0 && this.pelicula.name.length < 100 && regex.test(this.pelicula.name);
+            //const regex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ñ]+$/; sin acentos
+            const regex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~áéíóúÁÉÍÓÚñÑ]+$/;
+            return this.pelicula.name.length > 0 && this.pelicula.name.length < 50 && regex.test(this.pelicula.name);
+        },
+        validateDirector() {
+            const regex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~áéíóúÁÉÍÓÚñÑ]+$/;
+            return this.pelicula.director.length > 0 && this.pelicula.director.length < 30 && regex.test(this.pelicula.director);
         },
         validateDescription() {
-            const regex = /^[a-zA-Z0-9]+$/;
+            const regex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~áéíóúÁÉÍÓÚñÑ]+$/;
             return this.pelicula.description.length > 0 && this.pelicula.description.length < 100 && regex.test(this.pelicula.description);
         },
         validateGenres() {
@@ -156,6 +205,13 @@ export default {
         validateForm() {
             return this.validateName && this.validateDescription && this.validateGenres;
         },
+        validateReleaseDate() {
+            // Expresión regular para el formato YYYY-MM-DD
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            // Verificar que la fecha cumpla con el formato YYYY-MM-DD
+            return regex.test(this.pelicula.releaseDate);
+        },
+
 
     }
 
