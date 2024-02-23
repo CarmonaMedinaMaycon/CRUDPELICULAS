@@ -12,6 +12,21 @@ const getMovie = async () => {
    }
 };
 
+
+const getGenres = async () => {
+   try { 
+    const response = await axios.get("http://localhost:8080/api/genres/");
+    console.log(response);
+      return response.data;
+   } catch (error) {
+      throw error;
+   }
+};
+
+
+
+
+
 const search = async (param) => {
    try { 
    console.log(param);
@@ -44,6 +59,7 @@ const postMovie = async (pelicula) => {
    
 export default {
    getMovie,
+   getGenres,
    postMovie,
    search, 
    sortedByReleaseDateDesc

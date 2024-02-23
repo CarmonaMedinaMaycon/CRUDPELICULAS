@@ -10,19 +10,21 @@
                         <b-row>
                             <b-col>
                                 <label for="pelicula">Nombre de la pelicula: *</label>
-                              
-                                    <b-form-input v-model="pelicula.name" type="text" class="form-control"
-              placeholder="Pelicula..." required 
-              :class="{ 'input-border-error': !validateName && pelicula.name.length > 0, 'input-border-success': validateName }"
-              aria-describedby="input-live-help input-live-feedback" />
 
-              <div v-if="!validateName && pelicula.name.length > 0" class="invalid-feedback">Formato inválido</div>
+                                <b-form-input v-model="pelicula.name" type="text" class="form-control"
+                                    placeholder="Pelicula..." required
+                                    :class="{ 'input-border-error': !validateName && pelicula.name.length > 0, 'input-border-success': validateName }"
+                                    aria-describedby="input-live-help input-live-feedback" />
+
+                                <div v-if="!validateName && pelicula.name.length > 0" class="invalid-feedback">Formato
+                                    inválido</div>
 
 
                             </b-col>
                             <b-col>
                                 <label for="pelicula">Genero de la pelicula: *</label>
-                                <b-form-select v-model="pelicula.genres.id" :state="validateGenres" :options="options"></b-form-select>
+                                <b-form-select v-model="pelicula.genres.id" :state="validateGenres"
+                                    :options="options"></b-form-select>
 
                                 <b-form-invalid-feedback :state="validateGenres">
                                     Selecciona un género válido
@@ -42,13 +44,13 @@
 
                             </b-col>
                         </b-row>
-                       
+
                     </form>
 
                 </main>
 
                 <footer class="text-center mt-5">
-                    <button class="btn m-1 cancel" @click="onClose" >
+                    <button class="btn m-1 cancel" @click="onClose">
                         Cancelar
                     </button>
                     <button class="btn m-1 success" @click="save" :disabled="!validateForm" type="submit">
@@ -72,32 +74,28 @@ export default {
                 name: "",
                 description: "",
                 genres: {
-                    id:null
+                    id: null
                 },
             },
             selected: null,
-            options: [
-                { value: null, text: "Selecciona una opción" },
-                { value: 1, text: "Terror" },
-                { value: 2, text: "Aventura" },
-                { value: 3, text: "Acción" },
-                { value: 4, text: "Catástrofe" },
-                { value: 5, text: "Ciencia Ficción." },
-                { value: 6, text: "Comedia" },
-                { value: 7, text: "Documentales" },
-                { value: 8, text: "Drama" },
-                { value: 9, text: 'Infantil' },
-            ],
+            options: [], //opciones de generos
 
         };
     },
     methods: {
         onClose() {
             this.$bvModal.hide("modal-save");
-            this.pelicula.name = ""
-            this.pelicula.description = ""
-            this.pelicula.genres.id = null
+            this.resetPelicula();
 
+        },
+        resetPelicula() {
+            this.pelicula = {
+                name: "",
+                description: "",
+                genres: {
+                    id: null
+                }
+            };
         },
         async save() {
             Swal.fire({
@@ -128,12 +126,25 @@ export default {
             });
         },
 
+        async fetchGenres() {
+            try {
+                const response = await Movies.getGenres();
+                this.options = response.data.map(genre => ({ value: genre.id, text: genre.name }));
+            } catch (error) {
+                console.error("Error al obtener los géneros:", error);
+            }
+        }
 
+
+
+    },
+    mounted() {
+        this.fetchGenres();
     },
     computed: {
         validateName() {
             const regex = /^[a-zA-Z0-9]+$/;
-            return this.pelicula.name.length > 0 && this.pelicula.name.length < 100 && regex.test(this.pelicula.name) ;
+            return this.pelicula.name.length > 0 && this.pelicula.name.length < 100 && regex.test(this.pelicula.name);
         },
         validateDescription() {
             const regex = /^[a-zA-Z0-9]+$/;
@@ -163,11 +174,12 @@ export default {
     background-color: brown;
     color: black;
 }
+
 .input-border-error {
-  border: 1px solid red !important; 
+    border: 1px solid red !important;
 }
 
 .input-border-success {
-  border: 1px solid green !important; 
+    border: 1px solid green !important;
 }
 </style>

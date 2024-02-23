@@ -61,6 +61,11 @@ export default {
           name: ''
         }
       },
+      genres: {
+        id: 0,
+        description: '',
+        name: ''
+      },
       search: '',
 
     }
@@ -76,6 +81,19 @@ export default {
         console.log("trono papito", error);
       }
     },
+
+    async getGenres() {
+      try {
+        const response = await Movies.getGenres();
+        console.log("soy la data generoos", response);
+        this.genres = response;
+      } catch (error) {
+        console.log("trono papito", error);
+      }
+    },
+
+
+
     async getSearch(search) {
       try {
         console.log();
@@ -90,7 +108,7 @@ export default {
     async sortMoviesByReleaseDateDesc() {
       try {
         const response = await Movies.sortedByReleaseDateDesc();
-        this.peliculas = response.data; 
+        this.peliculas = response.data;
         console.log(response);
       } catch (error) {
         console.error("Error al ordenar las películas:", error);
@@ -138,7 +156,8 @@ export default {
     // },
   },
   mounted() {
-    this.getMovies()
+    this.getMovies(),
+    this.getGenres()
   },
 };
 </script>
