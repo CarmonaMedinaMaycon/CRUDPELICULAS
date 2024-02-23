@@ -15,24 +15,27 @@
       </div>
     </template>
     <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar pelicula" aria-label="Buscar pelicula"
-                     v-model="search"/>
-                     <b-button @click="getSearch(search)" class="input-group-text bg-primary text-secondary" readonly>buscar</b-button>
-            </div>
+      <input type="text" class="form-control" placeholder="Buscar pelicula" aria-label="Buscar pelicula"
+        v-model="search" />
+      <b-button @click="getSearch(search)" class="input-group-text bg-primary text-secondary" readonly>buscar</b-button>
+    </div>
+    <button @click="sortMoviesByReleaseDateDesc()">Ordenar por Fecha de Lanzamiento Descendente</button>
     <b-row class="mb-4">
-        <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
-          <b-card :title="pelicula.name"  img-src="https://imgs.search.brave.com/5yLy2Vd-AcHQFOAMoQtlMkUY5VNtYEPsmMJ2pLqI1HA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzZXQuY29t/L3cvZnVsbC9iLzcv/OC80MDQzNy5qcGc"  class="mb-2">
-            <b-card-text class="card-text-scroll">
-              <b>Género:</b> {{ pelicula.genres.name }}<br>
-              <b>Director:</b> {{ pelicula.director }}<br>
-              <b>Descripción:</b> {{ pelicula.description }}<br>
-              <b>Fecha de estreno:</b> {{ pelicula.releaseDate }}<br>
-            </b-card-text>
-         
-          </b-card>
-        </b-col>
-      </b-row>
-      <ModalSave/>
+      <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
+        <b-card :title="pelicula.name"
+          img-src="https://imgs.search.brave.com/5yLy2Vd-AcHQFOAMoQtlMkUY5VNtYEPsmMJ2pLqI1HA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzZXQuY29t/L3cvZnVsbC9iLzcv/OC80MDQzNy5qcGc"
+          class="mb-2">
+          <b-card-text class="card-text-scroll">
+            <b>Género:</b> {{ pelicula.genres ? pelicula.genres.name : 'Sin género' }}<br>
+            <b>Director:</b> {{ pelicula.director }}<br>
+            <b>Descripción:</b> {{ pelicula.description }}<br>
+            <b>Fecha de estreno:</b> {{ pelicula.releaseDate }}<br>
+          </b-card-text>
+
+        </b-card>
+      </b-col>
+    </b-row>
+    <ModalSave />
 
 
   </div>
@@ -46,43 +49,55 @@ export default {
   name: "pelis",
   data() {
     return {
-      peliculas:{
-        id:0,
-        name:'',
-        director:'',
-        description:'',
-        releaseDate:'',
-        genres:{
-          id:0,
-          description:'',
-          name:''
+      peliculas: {
+        id: 0,
+        name: '',
+        director: '',
+        description: '',
+        releaseDate: '',
+        genres: {
+          id: 0,
+          description: '',
+          name: ''
         }
       },
-      search:'',
+      search: '',
 
     }
   },
 
   methods: {
     async getMovies() {
-     try {
-      const response = await Movies.getMovie();
-      console.log("soy la data", response);
-      this.peliculas = response;
-     } catch (error) {
-      console.log("trono papito", error);
-     }
-    }, 
+      try {
+        const response = await Movies.getMovie();
+        console.log("soy la data", response);
+        this.peliculas = response;
+      } catch (error) {
+        console.log("trono papito", error);
+      }
+    },
     async getSearch(search) {
-     try {
-      console.log();
-      const response = await Movies.search(search);
-      console.log("soy la data", response);
-      this.peliculas = response;
-     } catch (error) {
-      console.log("trono papito", error);
-     }
-    }, 
+      try {
+        console.log();
+        const response = await Movies.search(search);
+        console.log("soy la data", response);
+        this.peliculas = response;
+      } catch (error) {
+        console.log("trono papito", error);
+      }
+    },
+
+    async sortMoviesByReleaseDateDesc() {
+      try {
+        const response = await Movies.sortedByReleaseDateDesc();
+        this.peliculas = response.data; 
+        console.log(response);
+      } catch (error) {
+        console.error("Error al ordenar las películas:", error);
+      }
+    },
+
+
     // OpenEditModal(movie) {
     //   this.selectedMovie = movie;
     //   this.$bvModal.show('modal-update-movie');
@@ -155,6 +170,5 @@ export default {
 .card-text-scroll {
   max-height: 150px;
   overflow-y: auto;
-  /* añade una barra de desplazamiento vertical si es necesario */
 }
 </style>
