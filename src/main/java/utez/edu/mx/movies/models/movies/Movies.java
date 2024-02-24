@@ -17,31 +17,31 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Movies {
+    public class Movies {
+    
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+    
+        @Column(nullable = false)
+        private String name;
+    
+        @Column(nullable = false)
+        private String director;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String director;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE) // solo guarda año/mes/dia yyyy-mm-dd
-    private Date releaseDate; //
-
-
-    @Column(nullable = false)
-    private String description;
-
-
-    @ManyToOne
-    @JoinColumn(name = "genres_id", nullable = false)
-    private Genres genres;
-
-
-
-}
+        @Column(nullable = false)
+        @Temporal(TemporalType.DATE) // solo guarda año/mes/dia yyyy-mm-dd
+        private Date releaseDate; //
+    
+    
+        @Column(nullable = false)
+        private String description;
+    
+    
+        @ManyToOne
+        @JoinColumn(name = "genres_id", nullable = false)
+        private Genres genres;
+    
+    
+    
+    }
