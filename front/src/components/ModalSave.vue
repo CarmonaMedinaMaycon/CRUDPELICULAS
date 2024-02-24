@@ -51,9 +51,9 @@
                     <button class="btn m-1 cancel" @click="onClose" >
                         Cancelar
                     </button>
-                    <button class="btn m-1 success" @click="save" :disabled="!validateForm" type="submit">
-                        Registrar
-                    </button>
+                        <button class="btn m-1 success" @click="save"  :disabled="!validateForm" type="submit">
+                            Registrar
+                        </button>
                 </footer>
             </b-modal>
         </div>
@@ -113,13 +113,15 @@ export default {
                     try {
                         console.log(this.pelicula);
                         await Movies.postMovie(this.pelicula);
+                        
                         Swal.fire({
                             title: "¡Guardada!",
                             text: "La pelicula se registró correctamente",
                             icon: "success"
                         });
                         this.onClose();
-                        this.$emit('movie-updated');
+
+                        this.$emit('reloadMovies')
                     } catch (error) {
                         console.log("Error al guardar la pelicula", error);
                     }
