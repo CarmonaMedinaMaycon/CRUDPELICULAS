@@ -31,7 +31,6 @@
                                 </b-form-invalid-feedback>
                             </b-col>
                         </b-row>
-
                         <b-row>
                             <b-col>
                                 <label for="director">Director: *</label>
@@ -54,7 +53,6 @@
                                     inválido</div>
                             </b-col>
                         </b-row>
-
                         <b-row>
                             <b-col>
                                 <label for="pelicula">Descripción de la pelicula: *</label>
@@ -68,7 +66,6 @@
 
                             </b-col>
                         </b-row>
-
                     </form>
 
                 </main>

@@ -8,18 +8,22 @@
           </b>
         </div>
         <div class="bodybutton">
-          <b-button v-b-modal.modal-save class="btnadd">
-            <b-icon icon="plus"></b-icon> Registrar pelicula
+          <b-button v-b-modal.modal-save class="btnadd mr-2">
+            <b-icon icon="plus"></b-icon> Registrar película
           </b-button>
+          <b-button squared variant="info" @click="sortMoviesByReleaseDateDesc()"> <b-icon icon="calendar"></b-icon>
+            Ordenar películas</b-button>
         </div>
+
       </div>
     </template>
+  
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Buscar pelicula" aria-label="Buscar pelicula"
         v-model="search" />
       <b-button @click="getSearch(search)" class="input-group-text bg-primary text-secondary" readonly>buscar</b-button>
     </div>
-    <button @click="sortMoviesByReleaseDateDesc()">Ordenar por Fecha de Lanzamiento Descendente</button>
+    <br>
     <b-row class="mb-4">
       <b-col v-for="(pelicula, key) in peliculas" :key="key" lg="3" md="6" sm="12">
         <b-card :title="pelicula.name"
@@ -31,10 +35,12 @@
             <b>Descripción:</b> {{ pelicula.description }}<br>
             <b>Fecha de estreno:</b> {{ pelicula.releaseDate }}<br>
           </b-card-text>
-
+          <b-button v-b-modal.modal-update variant="primary" class="mr-2">Editar</b-button>
+          <b-button @click="deleteMovie(pelicula.id)" variant="danger">Eliminar</b-button>
         </b-card>
       </b-col>
     </b-row>
+    <ModalUpdate />
     <ModalSave />
 
 
@@ -44,8 +50,10 @@
 <script>
 import Movies from './services/Movies';
 import ModalSave from './components/ModalSave.vue';
+import ModalUpdate from './components/ModalUpdate.vue';
+import Swal from 'sweetalert2';
 export default {
-  components: { ModalSave },
+  components: { ModalSave, ModalUpdate },
   name: "pelis",
   data() {
     return {
@@ -72,7 +80,7 @@ export default {
   },
 
   methods: {
-    
+
 
     async getMovies() {
       try {
@@ -116,50 +124,37 @@ export default {
         console.error("Error al ordenar las películas:", error);
       }
     },
+    async deleteMovie(id) {
+      Swal.fire({
+        title: "¿Estás seguro de eliminar esta película?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#008c6f',
+        cancelButtonColor: '#e11c24',
+        confirmButtonText: "Confirmar",
+        cancelButtonText: 'Cancelar',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await Movies.deleteMovie(id);
+            console.log("Película eliminada:", response);
+            Swal.fire({
+              title: "Eliminada!",
+              text: "La película se eliminó correctamente",
+              icon: "success"
+            });
+            this.getMovies();
+          } catch (error) {
+            console.error("Error al eliminar la película:", error);
+          }
+        }
+      });
+    }
 
-
-    // OpenEditModal(movie) {
-    //   this.selectedMovie = movie;
-    //   this.$bvModal.show('modal-update-movie');
-    // },
-    // async deleteMovie(id) {
-    //   const confirmed = await Swal.fire({
-    //     title: "¿Estás seguro de eliminar la película?",
-    //     icon: 'warning',
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#008c6f',
-    //     cancelButtonColor: '#e11c24',
-    //     confirmButtonText: "Sí, eliminar",
-    //     cancelButtonText: 'Cancelar',
-    //   });
-
-    //   if (confirmed.isConfirmed) {
-    //     try {
-    //       const response = await axios.delete(`http://localhost:8080/api-movieBack/peliculas/${id}`);
-    //       if (response.data.error) {
-    //         console.error(response.data.message);
-    //       } else {
-    //         Swal.fire({
-    //           title: 'Eliminada',
-    //           text: 'La película se eliminó correctamente',
-    //           icon: 'success',
-    //         });
-    //         this.fetchData();
-    //       }
-    //     } catch (error) {
-    //       const { data } = error;
-    //       this.$swal.fire({
-    //         icon: "error",
-    //         text: data?.text ? data.text : "Error interno",
-    //         timer: 3000,
-    //       });
-    //     }
-    //   }
-    // },
   },
   mounted() {
     this.getMovies(),
-    this.getGenres()
+      this.getGenres()
   },
 };
 </script>
